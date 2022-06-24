@@ -1,10 +1,26 @@
-import React from 'react'
-import { Text } from 'react-native'
+import React from "react";
+import { FlatList, StyleSheet } from "react-native";
+import ColorBox from "../components/ColorBox";
 
-function ColorPalette() {
+function ColorPalette({ route }) {
+  const { colors } = route.params;
   return (
-    <Text>ColorPalette</Text>
-  )
+    <FlatList
+      style={styles.container}
+      data={colors}
+      keyExtractor={(item) => item.hexCode}
+      renderItem={({ item }) => (
+        <ColorBox hexCode={item.hexCode} colorName={item.colorName} />
+      )}
+    />
+  );
 }
 
-export default ColorPalette
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+    backgroundColor: "white",
+  },
+});
+
+export default ColorPalette;
