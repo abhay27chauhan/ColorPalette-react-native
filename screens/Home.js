@@ -1,10 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, FlatList, RefreshControl, TouchableOpacity, Text } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import PalettePreview from "../components/PalettePreview";
 
 const URL = "https://color-palette-api.kadikraman.now.sh/palettes";
 
-function Home({ navigation }) {
+function Home({ navigation, route }) {
+  const newPalette = route.params ? route.params.newPalette : null;
   const [palettes, setPalettes] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -16,10 +23,6 @@ function Home({ navigation }) {
     }
   }, []);
 
-  useEffect(() => {
-    handleFetchPalettes();
-  }, []);
-
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     await handleFetchPalettes();
@@ -27,6 +30,16 @@ function Home({ navigation }) {
       setIsRefreshing(false);
     }, 1000);
   });
+
+  useEffect(() => {
+    handleFetchPalettes();
+  }, []);
+
+  useEffect(() => {
+    if (newPalette) {
+      setPalettes(current => [newPalette, ...current]);
+    }
+  }, [newPalette]);
 
   return (
     <>
@@ -59,6 +72,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "white",
+  },
+  button: {
+    height: 50,
+    backgroundColor: "white",
+    padding: 10,
+  },
+  buttonText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "teal",
   },
 });
 
